@@ -179,13 +179,12 @@ export function layoutMidway(gameIds: readonly string[]): MidwayMap {
     }
   }
 
-  // Beside the booths: wagons and carts on the left, a tent and carts on the right.
+  // Beside the booths: wagons on the left, a tent and carts on the right.
   const side = FIRST_ROW_Y;
   // A billboard for AI DevCon, rising above the peaked tent on the right.
   add('billboard', 19, side - 1, 3, 1);
   add('wagon', 2, side, 3, 1, 0);
   add('wagon', 2, side + 2, 3, 1, 1);
-  add('cart', 6, side, 1, 1, 0);
   add('bench', 5, side + 3);
   add('balloons', 1, side + 4);
   add('planter', 6, side + 5);
@@ -209,6 +208,8 @@ export function layoutMidway(gameIds: readonly string[]): MidwayMap {
   add('cart', 7, entrance + 1, 1, 1, 3);
   add('ticket-booth', AVENUE_X - 2, height - 2);
   add('carousel', 17, entrance, 4, 4);
+  // The popcorn cart, in the clearing just right of the carousel.
+  add('cart', 22, entrance + 1, 1, 1, 0);
   add('balloons', 22, entrance + 4);
   add('planter', 15, entrance);
   add('planter', 1, height - 2);

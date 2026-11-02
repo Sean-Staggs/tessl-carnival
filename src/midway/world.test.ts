@@ -75,6 +75,18 @@ describe('layoutMidway', () => {
     }
   });
 
+  it('puts the popcorn cart in the clearing right of the carousel', () => {
+    const map = layoutMidway(['water-cannon']);
+    const carousel = map.props.find((p) => p.kind === 'carousel')!;
+    const popcorn = map.props.filter((p) => p.kind === 'cart' && p.variant === 0);
+    expect(popcorn).toHaveLength(1);
+    const cart = popcorn[0];
+    expect(cart.x).toBeGreaterThan(carousel.x + carousel.w);
+    expect(cart.x + cart.w).toBeLessThanOrEqual(map.width - 1);
+    expect(cart.y).toBeGreaterThanOrEqual(carousel.y);
+    expect(cart.y + cart.h).toBeLessThanOrEqual(carousel.y + carousel.h);
+  });
+
   it('keeps the avenue clear from the gate to the big top', () => {
     const map = layoutMidway(['water-cannon']);
     for (let y = 6; y < map.height - 1; y++) {
