@@ -376,11 +376,11 @@ const RED: Stripes = {
   b: palette.cream,
   bShade: palette.creamShade,
 };
-const GOLD: Stripes = {
-  a: palette.gold,
-  aShade: palette.goldShade,
-  b: palette.cream,
-  bShade: palette.creamShade,
+const RED_BLUE: Stripes = {
+  a: palette.red,
+  aShade: palette.redShade,
+  b: palette.blue,
+  bShade: palette.blueShade,
 };
 const BLUE: Stripes = {
   a: palette.blue,
@@ -388,7 +388,7 @@ const BLUE: Stripes = {
   b: palette.cream,
   bShade: palette.creamShade,
 };
-const TENT_COLORS = [GOLD, BLUE, BLUE, RED] as const;
+const TENT_COLORS = [RED_BLUE, BLUE, BLUE, RED] as const;
 
 function rimPoint(c: Pt, r: number, angle: number, z: number): Pt {
   return [c[0] + Math.cos(angle) * r * ISO_RX, c[1] + Math.sin(angle) * r * ISO_RY - z];
