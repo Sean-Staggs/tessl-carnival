@@ -38,11 +38,24 @@ export interface WaterCannonState {
   shots: Shot[];
   splashes: Splash[];
   tank: number;
+  /** How many shots a full tank holds. */
+  tankSize: number;
   score: number;
   phase: 'playing' | 'over';
 }
 
-export function createState(): WaterCannonState {
+/**
+ * Reads the tank size from a query string such as `?shots=25`. A whole number
+ * from 1 to 99 is used as is; anything else falls back to `TANK_SIZE`.
+ */
+export function tankSizeFromQuery(search: string): number {
+  const value = new URLSearchParams(search).get('shots')?.trim() ?? '';
+  if (!/^\d+$/.test(value)) return TANK_SIZE;
+  const size = Number(value);
+  return size >= 1 && size <= 99 ? size : TANK_SIZE;
+}
+
+export function createState(tankSize = TANK_SIZE): WaterCannonState {
   const spacing = WIDTH / TARGETS_PER_RAIL;
   const targets = RAILS.flatMap((rail) =>
     Array.from({ length: TARGETS_PER_RAIL }, (_, i) => ({
@@ -52,7 +65,7 @@ export function createState(): WaterCannonState {
       speed: rail.speed,
     })),
   );
-  return { targets, shots: [], splashes: [], tank: TANK_SIZE, score: 0, phase: 'playing' };
+  return { targets, shots: [], splashes: [], tank: tankSize, tankSize, score: 0, phase: 'playing' };
 }
 
 /** Faster targets are worth more: 10 points per 60 px/s, rounded up. */
@@ -182,7 +195,7 @@ function draw(
   ctx.textAlign = 'left';
   ctx.fillText(`Score ${state.score}`, 16, HEIGHT - 20);
   ctx.textAlign = 'right';
-  ctx.fillText(`Water ${state.tank}/${TANK_SIZE}`, WIDTH - 16, HEIGHT - 20);
+  ctx.fillText(`Water ${state.tank}/${state.tankSize}`, WIDTH - 16, HEIGHT - 20);
 
   if (state.phase === 'over') {
     ctx.fillStyle = colors.background;
@@ -210,7 +223,8 @@ export const waterCannon: CarnivalGame = {
     canvas.width = WIDTH;
     canvas.height = HEIGHT;
 
-    let state = createState();
+    const tankSize = tankSizeFromQuery(location.search);
+    let state = createState(tankSize);
     let scoreRecorded = false;
     const aim = { x: WIDTH / 2, y: 0 };
 
@@ -225,7 +239,7 @@ export const waterCannon: CarnivalGame = {
     const onDown = (event: PointerEvent) => {
       Object.assign(aim, toCanvas(event));
       if (state.phase === 'over') {
-        state = createState();
+        state = createState(tankSize);
         scoreRecorded = false;
       } else {
         fire(state, aim.x, aim.y);
