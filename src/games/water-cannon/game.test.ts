@@ -7,6 +7,7 @@ import {
   isHit,
   scoreForHit,
   step,
+  tankSizeFromQuery,
   type Target,
 } from './game';
 
@@ -18,6 +19,38 @@ describe('water cannon', () => {
     expect(state.tank).toBe(TANK_SIZE);
     expect(state.score).toBe(0);
     expect(state.phase).toBe('playing');
+  });
+
+  it('starts with a custom tank size when given one', () => {
+    const state = createState(25);
+    expect(state.tank).toBe(25);
+    expect(state.tankSize).toBe(25);
+    fire(state, 400, 0);
+    expect(state.tank).toBe(24);
+    expect(state.tankSize).toBe(25);
+  });
+
+  it('reads a whole number of shots from 1 to 99 from the query string', () => {
+    expect(tankSizeFromQuery('?shots=25')).toBe(25);
+    expect(tankSizeFromQuery('?shots=1')).toBe(1);
+    expect(tankSizeFromQuery('?shots=99')).toBe(99);
+    expect(tankSizeFromQuery('?other=1&shots=40')).toBe(40);
+  });
+
+  it('falls back to the default tank for a missing or invalid shots value', () => {
+    for (const search of [
+      '',
+      '?',
+      '?shots=',
+      '?shots=0',
+      '?shots=-3',
+      '?shots=2.5',
+      '?shots=abc',
+      '?shots=100',
+      '?shots=1e1',
+    ]) {
+      expect(tankSizeFromQuery(search)).toBe(TANK_SIZE);
+    }
   });
 
   it('uses one shot of water per fire', () => {

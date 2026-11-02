@@ -24,9 +24,10 @@ Your final score is saved to the carnival's score board when the game ends.
 
 Add `?shots=25` to the page URL to change the size of the tank, for example
 `http://localhost:5173/?shots=25#/play/water-cannon`.
+A value that is not a whole number from 1 to 99 is ignored, and the tank holds the usual 15 shots.
 
 ## Files
 
-- `game.ts`: the game logic (`createState`, `fire`, `step`, `scoreForHit`) and the
+- `game.ts`: the game logic (`createState`, `tankSizeFromQuery`, `fire`, `step`, `scoreForHit`) and the
   `waterCannon` entry, the default export the midway finds.
 - `game.test.ts`: tests for the game logic.
