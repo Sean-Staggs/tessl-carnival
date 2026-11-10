@@ -18,7 +18,11 @@ Read `src/games/water-cannon/game.ts` first: it is the pattern to copy.
    - `README.md`
 3. **Write the logic as plain functions** in `game.ts`: a `createState()` and
    functions like `step(state, dt)` and the player's actions. Export them, and
-   keep them free of the canvas and the DOM so Vitest can run them.
+   keep them free of the canvas and the DOM so Vitest can run them. If the
+   game draws a preview of where an action will land, such as an aim cross or
+   a cannon angle, compute it with the same exported function the action uses,
+   so any clamp or offset applies to both. Don't repeat the clamp inline in
+   `draw`.
 4. **Export the game** from `game.ts`, as a named export and as the default
    export. The default export is how the midway finds it:
 
